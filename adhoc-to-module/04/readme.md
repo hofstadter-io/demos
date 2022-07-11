@@ -11,15 +11,25 @@ convert to a _generator module_ by adding the
 `--as-module <name>' flag to any `hof gen` call.
 
 ```
-hof gen ... --as-module demo
+hof gen ... --as-module github.com/username/demo
 hof gen -w -G demo
 ```
+
+- module name
+- templates dir
+- seed data
 - extras
   - cli tool
   - client/{js,go}
 	- html frontend
-- seed data
-- test it out
+- test it out (scripts?)
 - html+js
 
-- pipe API response back into a new `hof gen`
+### Share it for others to use
+
+All you have to do is push a git tag.
+Modules require the `vX.Y.Z` version / tag format.
+
+The next section [full-stack app in 60s](../../full-stack-app/)
+will use the module you pushlished.
+
