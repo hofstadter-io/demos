@@ -18,15 +18,6 @@ hof gen -w -G demo
 
 - module name
 - templates dir
-- seed data
-- extras
-  - cli tool
-  - client/{go}
-	- html frontend
-- test it out (scripts?)
-- html+js
-
-// maybe split frontend into next section
 
 ### running the app
 
@@ -42,14 +33,5 @@ go build -o app ./out/cmd/app
 # test it out
 ./app serve
 ./app alive
-./app create user tony admin tony@hof.io
 ```
-
-### Share it for others to use
-
-All you have to do is push a git tag.
-Modules require the `vX.Y.Z` version / tag format.
-
-The next section [full-stack app in 60s](../../full-stack-app/)
-will use the module you pushlished.
 
