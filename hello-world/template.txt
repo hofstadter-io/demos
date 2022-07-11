@@ -1,0 +1,7 @@
+// starring...
+
+{{ range .users -}}
+{{ .name }} [{{ .role }}] ({{ .email }}) ... {{ .extra }}
+{{ end }}
+
+// fin...
