@@ -23,7 +23,7 @@ touch types.{cue,go}
 
 - [01 - start using `hof gen`](./01/)
 - [02 - scaffold with data + templates](./02/)
-- [03 - generate a full-stack app](./03/)
+- [03 - rotate the template structure](./03/)
 - [04 - create a reusable module](./04/)
 - [05 - generating api clients](./05/)
 - [06 - sharing your module](./06/)
