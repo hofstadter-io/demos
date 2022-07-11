@@ -10,7 +10,8 @@ When you find this happening, you can easily
 convert to a _generator module_ by adding the
 `--as-module <name>' flag to any `hof gen` call.
 
-```
+```sh
+# name should match repo
 hof gen ... --as-module github.com/username/demo
 hof gen -w -G demo
 ```

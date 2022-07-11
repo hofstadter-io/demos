@@ -8,7 +8,7 @@ rotate our templates and generated code
 - main / pkg
 - wire it up
 
-```
+```sh
 hof gen types.cue -w --diff3 -O out \
 	-T main.go='cmd/{{ .Name }}/main.go' \
 	-T type.go:Types='[]pkg/{{ .name }}.go' \

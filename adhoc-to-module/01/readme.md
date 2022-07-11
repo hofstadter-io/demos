@@ -7,7 +7,7 @@ data + text/template = _
 1. NewType func, default role
 1. diff3 & custom code
 
-```
+```sh
 #0 see the full type spec
 cue export types.cue
 cue def types.cue

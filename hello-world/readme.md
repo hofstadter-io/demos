@@ -1,6 +1,6 @@
 # hello-world
 
-```
+```sh
 hof gen input.cue -T template.txt
 
 hof gen input.cue -T template.txt=out.txt --watch
@@ -8,7 +8,7 @@ hof gen input.cue -T template.txt=out.txt --watch
 
 #### input.cue
 
-```
+```cue
 users: {
 	// the cast
 	tony: role: "owner"
