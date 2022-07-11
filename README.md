@@ -1,6 +1,6 @@
 # demos
 
-demos of the hof cli
+demos of the [hof cli](https://github.com/hofstadter-io/hof)
 
 The subdirectories contain the code
 for the various demos made with hof
