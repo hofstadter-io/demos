@@ -9,6 +9,8 @@ full-stack app with their own data model.
 
 ### new app with different types
 
+#### setup a working dir
+
 ```sh
 # working dir
 mkdir app && cd app
@@ -17,7 +19,10 @@ go mod init github.com/username/app
 hof mod init cue github.com/username/app
 ```
 
-`cue.mods`
+#### cue.mods
+
+Our CUE dependencies, in this case
+just your generator module.
 
 ```go
 module github.com/username/app
@@ -25,11 +30,13 @@ module github.com/username/app
 cue v0.4.3
 
 require (
-	github.com/hofstadter-io/hof v0.6.3
+	github.com/username/demo v0.0.1
 )
 ```
 
-`app.cue`
+#### app.cue
+
+This is where we put the generator usage
 
 ```cue
 package app
@@ -39,7 +46,7 @@ import (
 )
 
 // This is using your generator
-App: #DemoGenerator & {
+App: demo.#DemoGenerator & {
 	@gen(app)
 
 	// inputs to the generator
@@ -48,22 +55,64 @@ App: #DemoGenerator & {
 
 	// add our datamodel
 	"Types": Types,
-	
 
 	// other settings
 	Outdir: "./out/"
 }
-
 ```
 
 ### the data model
 
-- albums / artists
+Our new app is a little cooler.
+It tracks bands, albums, and tours.
 
-`model.cue`
+#### model.cue
 
 ```cue
-Types: {...}
+package app
+
+// This is the core data model
+// whish is augmented and extended
+// by combining CUE and hof generators
+Types: #Type & {
+
+	// represents a band
+	Band: {
+		Fields: {
+			name: type: "string"
+			genre: type: "string"
+		}
+
+		Reln: {
+			Album: type: "HasMany"
+			Date: type: "HasMany"
+		}
+	}
+
+	// represents an album
+	Album: {
+		Fields: {
+			title: type: "string"
+			year:  type: "string"
+		}
+
+		Reln: {
+			Band: type: "OwnedBy"
+		}
+	}
+
+	// represents a tour date
+	Date: {
+		Fields: {
+			location: type: "string"
+			eventTime: type: "datetime"
+		}
+
+		Reln: {
+			Band: type: "OwnedBy"
+		}
+	}
+}
 ```
 
 ### running the app
@@ -73,10 +122,12 @@ Types: {...}
 hof mod vendor cue
 hof gen
 
-# go deps, server run
+# go deps, build app
 go mod tidy
-go run
+go build -o app ./out/cmd/app
 
 # test it out
-curl localhost:4242/internal/alive
+./app serve
+./app alive
+./app create user admin tony tony@hof.io
 ```

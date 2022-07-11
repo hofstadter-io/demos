@@ -26,6 +26,23 @@ hof gen -w -G demo
 - test it out (scripts?)
 - html+js
 
+### running the app
+
+```sh
+# hof deps, code gen
+hof mod vendor cue
+hof gen
+
+# go deps, build app
+go mod tidy
+go build -o app ./out/cmd/app
+
+# test it out
+./app serve
+./app alive
+./app create user admin tony tony@hof.io
+```
+
 ### Share it for others to use
 
 All you have to do is push a git tag.
