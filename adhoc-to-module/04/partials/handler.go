@@ -1,45 +1,45 @@
-{{ $TypeName := camelT .name }}
-// {{ $TypeName }} handlers
-func HandleCreate{{ $TypeName }}(c echo.Context) error {
-	in := new({{ $TypeName }})
+{{ $ModelName := camelT .name }}
+// {{ $ModelName }} handlers
+func HandleCreate{{ $ModelName }}(c echo.Context) error {
+	in := new({{ $ModelName }})
 	if err := c.Bind(in); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	ret, err := Create{{ $TypeName }}(in)
+	ret, err := Create{{ $ModelName }}(in)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleList{{ $TypeName }}(c echo.Context) error {
-	ret, err := List{{ $TypeName }}()
+func HandleList{{ $ModelName }}(c echo.Context) error {
+	ret, err := List{{ $ModelName }}()
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleGet{{ $TypeName }}(c echo.Context) error {
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+func HandleGet{{ $ModelName }}(c echo.Context) error {
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	ret, err := Get{{ $TypeName }}ByID(id)
+	ret, err := Get{{ $ModelName }}ByID(id)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleUpdate{{ $TypeName }}(c echo.Context) error {
-	in := new({{ $TypeName }})
+func HandleUpdate{{ $ModelName }}(c echo.Context) error {
+	in := new({{ $ModelName }})
 	if err := c.Bind(in); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	err := Update{{ $TypeName }}(id, in)
+	err := Update{{ $ModelName }}(id, in)
 	if err != nil {
 		return err
 	}
@@ -47,11 +47,11 @@ func HandleUpdate{{ $TypeName }}(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
-func HandleDelete{{ $TypeName }}(c echo.Context) error {
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+func HandleDelete{{ $ModelName }}(c echo.Context) error {
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	err := Delete{{ $TypeName }}(id)
+	err := Delete{{ $ModelName }}(id)
 	if err != nil {
 		return err
 	}

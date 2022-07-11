@@ -1,6 +1,6 @@
-package demo
+package {{ camel .Datamodel.Name }}
 
-{{ range .Types }}
+{{ range .Datamodel.Models }}
 type {{ camelT .name }} struct {
 	// defined fields
 	{{ range .Fields -}}

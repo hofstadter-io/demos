@@ -1,10 +1,10 @@
-package {{ .Name }}
+package {{ camel .Datamodel.Name }}
 
 import (
 	"gorm.io/gorm"
 )
 
-{{ range .Types }}
+{{ range .Datamodel.Models }}
 type {{ camelT .name }} struct {
 	// ORM fields
 	gorm.Model

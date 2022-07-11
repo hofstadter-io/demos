@@ -1,4 +1,4 @@
-package {{ .Name }}
+package {{ camel .Datamodel.Name }}
 
 import (
 	"gorm.io/gorm"
@@ -14,7 +14,7 @@ func InitDB() (err error) {
   }
 
   // Migrate the schema
-	{{ range .Types -}}
+	{{ range .Datamodel.Models -}}
   db.AutoMigrate(&{{ camelT .name }}{})
   {{ end }}
 

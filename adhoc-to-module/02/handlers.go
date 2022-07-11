@@ -1,4 +1,4 @@
-package {{ .Name }}
+package {{ camel .Datamodel.Name }}
 
 import (
 	"net/http"
@@ -8,70 +8,70 @@ import (
 
 // routes
 func setRoutes(e *echo.Echo) {
-{{ range .Types }}
-{{ $TypeName := camelT .name }}
-	e.POST("/{{ kebab .name }}", HandleCreate{{ $TypeName }})
-	e.GET("/{{ kebab .name }}", HandleList{{ $TypeName }})
-	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $TypeName }})
-	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $TypeName }})
-	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $TypeName }})
+{{ range .Datamodel.Models }}
+{{ $ModelName := camelT .name }}
+	e.POST("/{{ kebab .name }}", HandleCreate{{ $ModelName }})
+	e.GET("/{{ kebab .name }}", HandleList{{ $ModelName }})
+	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $ModelName }})
+	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $ModelName }})
+	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $ModelName }})
 {{ end }}
 }
 
-{{ range .Types }}
-{{ $TypeName := camelT .name }}
-// {{ $TypeName }} handlers
-func HandleCreate{{ $TypeName }}(c echo.Context) error {
-	in := new({{ $TypeName }})
+{{ range .Datamodel.Models }}
+{{ $ModelName := camelT .name }}
+// {{ $ModelName }} handlers
+func HandleCreate{{ $ModelName }}(c echo.Context) error {
+	in := new({{ $ModelName }})
 	if err = c.Bind(in); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	ret, err := Create{{ $TypeName }}(in)
+	ret, err := Create{{ $ModelName }}(in)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleList{{ $TypeName }}(c echo.Context) error {
-	ret, err := List{{ $TypeName }}()
+func HandleList{{ $ModelName }}(c echo.Context) error {
+	ret, err := List{{ $ModelName }}()
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleGet{{ $TypeName }}(c echo.Context) error {
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+func HandleGet{{ $ModelName }}(c echo.Context) error {
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	ret, err := Get{{ $TypeName }}ByID(id)
+	ret, err := Get{{ $ModelName }}ByID(id)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleUpdate{{ $TypeName }}(c echo.Context) error {
-	in := new({{ $TypeName }})
+func HandleUpdate{{ $ModelName }}(c echo.Context) error {
+	in := new({{ $ModelName }})
 	if err = c.Bind(in); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	ret, err := Update{{ $TypeName }}(id, in)
+	ret, err := Update{{ $ModelName }}(id, in)
 	if err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, ret)
 }
 
-func HandleDelete{{ $TypeName }}(c echo.Context) error {
-	// {{ $TypeName }} ID from path `{{ kebab .name }}/:id`
+func HandleDelete{{ $ModelName }}(c echo.Context) error {
+	// {{ $ModelName }} ID from path `{{ kebab .name }}/:id`
 	id := c.Param("id")
 	// call library
-	ret, err := Delete{{ $TypeName }}(id)
+	ret, err := Delete{{ $ModelName }}(id)
 	if err != nil {
 		return err
 	}

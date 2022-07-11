@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"{{ .Module }}/pkg"
+	"{{ Datamodel.Module }}/pkg"
 )
 
 func main() {

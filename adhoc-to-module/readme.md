@@ -9,7 +9,9 @@ You'll want to pick a name and repo so you can have the format
 - [03 - generate a full-stack app](./03/)
 - [04 - create a reusable module](./04/)
 
-See the subdirs in order
+We will use this module to build another
+[full-stack app](../full-stack-app/)
+in the next demo.
 
 ---
 

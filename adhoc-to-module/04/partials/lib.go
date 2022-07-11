@@ -1,6 +1,6 @@
-{{ $TypeName := camelT .name }}
-func Create{{ $TypeName }}(in *{{ $TypeName }}) (*{{ $TypeName }}, error) {
-	t := &{{ $TypeName }}{
+{{ $ModelName := camelT .name }}
+func Create{{ $ModelName }}(in *{{ $ModelName }}) (*{{ $ModelName }}, error) {
+	t := &{{ $ModelName }}{
 		{{ range .Fields }}{{ camelT .name }}: in.{{ camelT .name }},
 		{{ end }}
 	} 
@@ -11,20 +11,20 @@ func Create{{ $TypeName }}(in *{{ $TypeName }}) (*{{ $TypeName }}, error) {
 	return t, nil
 }
 
-func List{{ $TypeName }}() ([]*{{ $TypeName }}, error) {
-	out := make([]*{{ $TypeName }},0)
+func List{{ $ModelName }}() ([]*{{ $ModelName }}, error) {
+	out := make([]*{{ $ModelName }},0)
 	res := db.Find(&out)
 	return out, res.Error
 }
 
-func Get{{ $TypeName }}ByID(id string) (*{{ $TypeName }}, error) {	
-	out := new({{ $TypeName }})
+func Get{{ $ModelName }}ByID(id string) (*{{ $ModelName }}, error) {	
+	out := new({{ $ModelName }})
 	res := db.First(&out, id)
 	return out, res.Error
 }
 
-func Update{{ $TypeName }}(id string, up *{{ $TypeName }}) error {
-	t := &{{ $TypeName }}{
+func Update{{ $ModelName }}(id string, up *{{ $ModelName }}) error {
+	t := &{{ $ModelName }}{
 		{{ range .Fields }}{{ camelT .name }}: up.{{ camelT .name }},
 		{{ end }}
 	}
@@ -32,8 +32,8 @@ func Update{{ $TypeName }}(id string, up *{{ $TypeName }}) error {
 	return res.Error
 }
 
-func Delete{{ $TypeName }}(id string) error {
-	res := db.Delete(&{{ $TypeName }}{}, id)
+func Delete{{ $ModelName }}(id string) error {
+	res := db.Delete(&{{ $ModelName }}{}, id)
 	return res.Error
 }
 

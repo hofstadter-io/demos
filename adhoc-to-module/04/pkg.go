@@ -20,7 +20,7 @@ func InitDB() (err error) {
   }
 
   // Migrate the schema
-	{{ range .Types -}}
+	{{ range .Datamodel.Models -}}
   err = db.AutoMigrate(&{{ camelT .name }}{})
   if err != nil {
 		return fmt.Errorf("failed to migrate database:\n%s", err)
@@ -42,12 +42,12 @@ func SetupRouter(e *echo.Echo) {
 	})
 
 	// Setup api routes
-	{{- range .Types -}}
-	{{- $TypeName := camelT .name }}
-	e.POST("/{{ kebab .name }}", HandleCreate{{ $TypeName }})
-	e.GET("/{{ kebab .name }}", HandleList{{ $TypeName }})
-	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $TypeName }})
-	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $TypeName }})
-	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $TypeName }})
+	{{- range .Datamodel.Models -}}
+	{{- $ModelName := camelT .name }}
+	e.POST("/{{ kebab .name }}", HandleCreate{{ $ModelName }})
+	e.GET("/{{ kebab .name }}", HandleList{{ $ModelName }})
+	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $ModelName }})
+	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $ModelName }})
+	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $ModelName }})
 	{{- end }}
 }

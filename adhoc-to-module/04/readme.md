@@ -21,10 +21,12 @@ hof gen -w -G demo
 - seed data
 - extras
   - cli tool
-  - client/{js,go}
+  - client/{go}
 	- html frontend
 - test it out (scripts?)
 - html+js
+
+// maybe split frontend into next section
 
 ### running the app
 
@@ -40,7 +42,7 @@ go build -o app ./out/cmd/app
 # test it out
 ./app serve
 ./app alive
-./app create user admin tony tony@hof.io
+./app create user tony admin tony@hof.io
 ```
 
 ### Share it for others to use

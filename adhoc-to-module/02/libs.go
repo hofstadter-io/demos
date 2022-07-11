@@ -1,34 +1,34 @@
-package {{ .Name }}
+package {{ camel .Datamodel.Name }}
 
 import (
 	"gorm.io/gorm"
 )
 
-{{ range .Types }}
-{{ $TypeName := camelT .name }}
+{{ range .Datamodel.Models }}
+{{ $ModelName := camelT .name }}
 
-func Create{{ $TypeName }}(in *{{ $TypeName }}) error {
-	res := db.Create(&{{ $TypeName }}{
+func Create{{ $ModelName }}(in *{{ $ModelName }}) error {
+	res := db.Create(&{{ $ModelName }}{
 		{{ range .Fields }}{{ camelT .name }}: in.{{ camelT .name }},
 		{{ end }}
 	})
 	return res.Error
 }
 
-func List{{ $TypeName }}() ([]*{{ $TypeName }}, error) {
-	out := make([]*{{ $TypeName }})
+func List{{ $ModelName }}() ([]*{{ $ModelName }}, error) {
+	out := make([]*{{ $ModelName }})
 	res := db.Find(&out)
 	return out, res.Error
 }
 
-func Get{{ $TypeName }}ByID(id int) (*{{ $TypeName }}, error) {	
-	out := new({{ $TypeName }})
+func Get{{ $ModelName }}ByID(id int) (*{{ $ModelName }}, error) {	
+	out := new({{ $ModelName }})
 	res := db.First(&out, id)
 	return out, res.Error
 }
 
-func Update{{ $TypeName }}(id int, up *{{ $TypeName }}) error {
-	res := db.Model(up).Update(&{{ $TypeName }}{
+func Update{{ $ModelName }}(id int, up *{{ $ModelName }}) error {
+	res := db.Model(up).Update(&{{ $ModelName }}{
 		ID: id,
 		{{ range .Fields }}{{ camelT .name }}: in.{{ camelT .name }},
 		{{ end }}
@@ -36,8 +36,8 @@ func Update{{ $TypeName }}(id int, up *{{ $TypeName }}) error {
 	return res.Error
 }
 
-func Delete{{ $TypeName }}(id int) error {
-	res := db.Model(up).Delete(&{{ $TypeName }}{
+func Delete{{ $ModelName }}(id int) error {
+	res := db.Model(up).Delete(&{{ $ModelName }}{
 		ID: id,
 	})
 

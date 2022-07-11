@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"{{ .Module }}/pkg"
+	"{{ .Datamodel.Module }}/pkg"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 		port = p
 	}
 	port = ":" + port
-	fmt.Println("listening on" + port)
+	fmt.Println("{{ .Datamodel.Name }} listening on" + port)
 
 	// run until we find the bottom turtle
 	e.Logger.Fatal(e.Start(port))

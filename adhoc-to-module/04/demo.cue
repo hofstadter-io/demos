@@ -10,10 +10,7 @@ DemoExample: #DemoGenerator & {
 	@gen(demo)
 
 	// inputs to the generator
-	"Name": Name,
-	"Module": Module,
-	"Types": Types,
-	
+	"Datamodel": Datamodel,
 
 	// other settings
 	Diff3: true	
@@ -36,7 +33,7 @@ DemoExample: #DemoGenerator & {
 	// typically you enforce schema(s) here
 	Name: _
 	Module: _
-	Types: _
+	Models: _
 	
 
 	//
@@ -46,7 +43,7 @@ DemoExample: #DemoGenerator & {
 	// This is the global input data the templates will see
 	// You can reshape and transform the user inputs
 	// While we put it under internal, you can expose In
-	In: {
+	In: #Datamodel & {
 		// if you want to user your input data
 		// add top-level fields from your
 		// CUE entrypoints here, adjusting as needed
@@ -55,9 +52,8 @@ DemoExample: #DemoGenerator & {
 
 		"Name": Name
 		"Module": Module
-		"Types": Types
-		
-
+		"Models": Models
+	
 		...
 	}
 
@@ -90,7 +86,7 @@ DemoExample: #DemoGenerator & {
 		TemplatePath: "main.go"
 		Filepath:     "cmd/{{ .Name }}/main.go"
 	}
-	t_1: [ for _,el in In.Types {
+	t_1: [ for _,el in In.Datamodel.Models {
 		In: el
 		
 		TemplatePath: "type.go"

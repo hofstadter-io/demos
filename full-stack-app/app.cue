@@ -13,7 +13,7 @@ App: demo.#DemoGenerator & {
 	Module: "github.com/verdverm/app"
 
 	// add our datamodel
-	"Types": Types,	
+	"Datamodel": Datamodel,
 
 	// other settings
 	Outdir: "./out/"
