@@ -1,4 +1,4 @@
-# 02
+# 02 - scaffold with data + templates
 
 build out around your types
 

@@ -1,4 +1,4 @@
-# 01
+# 01 - start using `hof gen`
 
 data + text/template = _
 

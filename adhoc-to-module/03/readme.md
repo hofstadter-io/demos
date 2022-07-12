@@ -1,4 +1,4 @@
-# 03
+# 03 - rotated the template structures
 
 rotate our templates and generated code
 

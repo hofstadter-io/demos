@@ -16,6 +16,11 @@ DemoExample: #DemoGenerator & {
 	Diff3: true	
 	Outdir: "./out/"
 
+	// watch settings
+	WatchGlobs: ["types.cue"]
+	// for template authoring
+	WatchXcue:  ["partials/*", "templates/*", "static/*"]
+
 	// required by examples inside the same module
 	// your users do not set or see this field
 	PackageName: ""
@@ -29,77 +34,48 @@ DemoExample: #DemoGenerator & {
 	// user input fields
 	//
 
-	// this is the interface for this generator module
-	// typically you enforce schema(s) here
-	Name: _
-	Module: _
-	Models: _
-	
+	Datamodel: #Datamodel
 
 	//
 	// Internal Fields
 	//
 
-	// This is the global input data the templates will see
-	// You can reshape and transform the user inputs
-	// While we put it under internal, you can expose In
-	In: #Datamodel & {
-		// if you want to user your input data
-		// add top-level fields from your
-		// CUE entrypoints here, adjusting as needed
-		// Since you made this a module for others,
-		// it won't output until this field is filled
+	In: {
+		// pass in full input
+		"Datamodel": Datamodel,
 
-		"Name": Name
-		"Module": Module
-		"Models": Models
-	
-		...
+		// lift fields to top-level
+		Name: Datamodel.Name,
+		Module: Datamodel.Module,
 	}
 
 	// required for hof CUE modules to work
 	// your users do not set or see this field
 	PackageName: string | *"github.com/hofstadter-io/demos"
 
-	// Templates: [gen.#Templates & {Globs: ["./templates/**/*"], TrimPrefix: "./templates/"}]
-	// Templates: [ { Globs: [ "main.go", "type.go", "pkg.go",  ] } ]
-	Templates:  [ { Globs: [ "templates/*",  ] } ]
-	
-	// Partials: [gen.#Templates & {Globs: ["./partials/**/*"], TrimPrefix: "./partials/"}]
-	Partials:  [ { Globs: [ "partials/*",  ] } ]
-	
-
-	
-
 	// The final list of files for hof to generate
 	Out: [...gen.#File] & [
-		t_0,
-		for _, t in t_1 { t },
-		t_2,
-		
+		for _, t in _onceFiles { t },
+		for _, t in _typeFiles { t },
 	]
 
-	// These are the -T mappings
-	t_0: {
-		
-		
+	// templates rendered once per code gen event
+	_onceFiles: [{
 		TemplatePath: "main.go"
 		Filepath:     "cmd/{{ .Name }}/main.go"
-	}
-	t_1: [ for _,el in In.Datamodel.Models {
+	}, {
+		TemplatePath: "pkg.go"
+		Filepath:     "pkg/pkg.go"
+	}]
+
+	// templates rendered per elem, per code gen event
+	_typeFiles: [ for _,el in In.Datamodel.Models {
 		In: el
 		
 		TemplatePath: "type.go"
 		Filepath:     "pkg/{{ .name }}.go"
 	}]
-	t_2: {
-		
-		
-		TemplatePath: "pkg.go"
-		Filepath:     "pkg/pkg.go"
-	}
-	
 
-	// so your users can build on this
+	// so others can build on this
 	...
 }

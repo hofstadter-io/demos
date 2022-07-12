@@ -1,16 +1,15 @@
-# 05
+# 05 - enhancing the api server
 
 Generating clients for the app
 
+- apikeys
+- graceful shutdown
+- others echo/gorm things?
+- config (viper?), (CUE?) (watch / reload)
 - extras
-  - cli tool
+  - cli tool (cobra)
   - client/{go}
-	- html frontend
-- test it out (scripts?)
-- html+js
 - seed data
-
-// maybe split frontend into next section
 
 ## go cli / client
 
@@ -21,10 +20,8 @@ Generating clients for the app
 ./app alive
 
 # test the go client
-./app create user tony admin tony@hof.io
+./app seed data.cue
+./app get user --email tony@hof.io
 ```
 
 
-## add web frontend
-
-### open http://localhost:4242

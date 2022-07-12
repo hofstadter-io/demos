@@ -1,9 +1,7 @@
-# 04
-
-let's make this run
+# 04 - create a ruesuable module
 
 
-### Convert to generator module
+## Convert to generator module
 
 Our flags are starting to get a little verbose.
 When you find this happening, you can easily
@@ -18,6 +16,11 @@ hof gen -w -G demo
 
 - module name
 - templates dir
+
+
+## let's make this run
+
+### tidy up the code
 
 ### running the app
 
