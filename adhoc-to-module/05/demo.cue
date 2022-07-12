@@ -17,9 +17,7 @@ DemoExample: #DemoGenerator & {
 	Outdir: "./out/"
 
 	// watch settings
-	WatchGlobs: ["types.cue"]
-	// for template authoring
-	WatchXcue:  ["partials/*", "templates/*", "static/*"]
+	WatchFull: ["types.cue"]
 
 	// required by examples inside the same module
 	// your users do not set or see this field
@@ -64,8 +62,11 @@ DemoExample: #DemoGenerator & {
 		TemplatePath: "main.go"
 		Filepath:     "cmd/{{ .Name }}/main.go"
 	}, {
-		TemplatePath: "pkg.go"
-		Filepath:     "pkg/pkg.go"
+		TemplatePath: "api.go"
+		Filepath:     "pkg/api.go"
+	}, {
+		TemplatePath: "cli.go"
+		Filepath:     "pkg/cli.go"
 	}]
 
 	// templates rendered per elem, per code gen event

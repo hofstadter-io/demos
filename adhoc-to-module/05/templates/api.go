@@ -3,6 +3,7 @@ package pkg
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -54,14 +55,14 @@ func SetupRouter(e *echo.Echo) {
 
 func RunServer() error {
 	// Setup the DB
-	if err := pkg.InitDB(); err != nil {
+	if err := InitDB(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
   }
 
 	// Create the server
 	e := echo.New()
-	pkg.SetupRouter(e)
+	SetupRouter(e)
 
 	// get and format port
 	port := "4242"
@@ -73,4 +74,6 @@ func RunServer() error {
 
 	// run until we find the bottom turtle
 	e.Logger.Fatal(e.Start(port))
+
+	return nil
 }
