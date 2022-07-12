@@ -18,10 +18,8 @@ hof gen types.cue -T types.go=out.go
 hof gen types.cue -O out -T types.go
 
 #2/3 watch, regen, develop
-hof gen types.cue -O out -T types.go \
-  -W types.cue -X types.go
+hof gen types.cue -O out -T types.go -w
 
 #4 diff3 & custom code
-hof gen types.cue -O out -T types.go \
-  -W types.cue -X types.go --diff3
+hof gen types.cue -O out -T types.go -w --diff3
 ```

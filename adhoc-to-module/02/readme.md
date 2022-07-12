@@ -8,7 +8,7 @@ build out around your types
 - defaults, common db fields
 
 ```sh
-hof gen types.cue --diff3 -W types.cue -X '*.go' -O out \
+hof gen types.cue -w --diff3 -O out \
   -T types.go -T db.go -T libs.go -T handlers.go
 ```
 

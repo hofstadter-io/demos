@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-{{ template "partials/type.go" . }}
+{{ template "partials/struct.go" . }}
 
 {{ template "partials/lib.go" . }}
 

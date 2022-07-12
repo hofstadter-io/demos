@@ -14,6 +14,8 @@ Generating clients for the app
 ## go cli / client
 
 ```sh
+# regen if you aren't -w'n
+hof gen
 
 # run the server
 ./app serve

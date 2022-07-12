@@ -1,4 +1,4 @@
-# 04 - create a ruesuable module
+# 04 - create a reusable module
 
 
 ## Convert to generator module
@@ -11,7 +11,7 @@ convert to a _generator module_ by adding the
 ```sh
 # name should match repo
 hof gen ... --as-module github.com/username/demo
-hof gen -w -G demo
+hof gen -w
 ```
 
 - module name
@@ -25,15 +25,18 @@ hof gen -w -G demo
 ### running the app
 
 ```sh
-# hof deps, code gen
+# hof deps & code gen
 hof mod vendor cue
 hof gen
 
-# go deps, build app
+# go deps
+go mod init github.com/username/demo
 go mod tidy
+
+# build app
 go build -o app ./out/cmd/app
 
-# test it out
+# test it
 ./app serve
 ./app alive
 ```
