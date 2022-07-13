@@ -8,18 +8,18 @@ data + text/template = _
 1. diff3 & custom code
 
 ```sh
-#0 see the full type spec
-cue export types.cue
-cue def types.cue
+#0 see the full datamodel spec
+cue export models.cue
+cue def models.cue
 
 #1 the basics
-hof gen types.cue -T types.go
-hof gen types.cue -T types.go=out.go
-hof gen types.cue -O out -T types.go
+hof gen models.cue -T models.go
+hof gen models.cue -T models.go=out.go
+hof gen models.cue -O out -T models.go
 
 #2/3 watch, regen, develop
-hof gen types.cue -O out -T types.go -w
+hof gen models.cue -O out -T models.go -w
 
 #4 diff3 & custom code
-hof gen types.cue -O out -T types.go -w --diff3
+hof gen models.cue -O out -T models.go -w --diff3
 ```
