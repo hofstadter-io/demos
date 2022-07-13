@@ -4,7 +4,6 @@ rotate our templates and generated code
 
 - repeated templates (types -> type)
 - partials
-- more targets [cli,client/{go,js}(http)]
 
 - main / pkg
 - wire it up

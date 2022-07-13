@@ -62,11 +62,8 @@ DemoExample: #DemoGenerator & {
 		TemplatePath: "main.go"
 		Filepath:     "cmd/{{ .Name }}/main.go"
 	}, {
-		TemplatePath: "api.go"
-		Filepath:     "pkg/api.go"
-	}, {
-		TemplatePath: "cli.go"
-		Filepath:     "pkg/cli.go"
+		TemplatePath: "pkg.go"
+		Filepath:     "pkg/pkg.go"
 	}]
 
 	// templates rendered per elem, per code gen event

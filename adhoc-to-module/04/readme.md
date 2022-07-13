@@ -14,13 +14,12 @@ hof gen ... --as-module github.com/username/demo
 hof gen -w
 ```
 
-- module name
-- templates dir
+## code changes
 
-
-## let's make this run
-
-### tidy up the code
+- set module name
+- move templates to own dir, like partials
+- remove a lot of generator config, use defaults
+- add static/* without change
 
 ### running the app
 

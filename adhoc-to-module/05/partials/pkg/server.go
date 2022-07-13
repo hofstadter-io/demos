@@ -1,35 +1,3 @@
-package pkg
-
-import (
-	"fmt"
-	"net/http"
-	"os"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-)
-
-var db *gorm.DB
-
-func InitDB() (err error) {
-	// Create db connection
-	db, err = gorm.Open(sqlite.Open("{{ .Name }}.db"), &gorm.Config{})
-  if err != nil {
-		return fmt.Errorf("failed to connect database:\n%s", err)
-  }
-
-  // Migrate the schema
-	{{ range .Datamodel.Models -}}
-  err = db.AutoMigrate(&{{ camelT .name }}{})
-  if err != nil {
-		return fmt.Errorf("failed to migrate database:\n%s", err)
-  }
-  {{ end }}
-
-	return nil
-}
 
 func SetupRouter(e *echo.Echo) {
 	// setup recovery middleware

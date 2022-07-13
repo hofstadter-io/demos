@@ -10,7 +10,7 @@ import (
 
 {{/* it really does seem like turtles all the way down here */}}
 
-{{ template "type.go" . }}
+{{ template "struct.go" . }}
 
 {{ template "lib.go" . }}
 
