@@ -9,7 +9,6 @@ type {{ .Name }} struct {
 
 	// relations
 	{{ range .Reln -}}
-	{{ if eq .Type "OwnedBy" }}{{ .Name }}ID uint{{end}}
 	{{ .Name }} {{ .GoType }}
 	{{ end }}
 }
