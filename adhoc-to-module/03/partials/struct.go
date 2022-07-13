@@ -1,4 +1,4 @@
-type {{ camelT .name }} struct {
+type {{ .Name }} struct {
 	// gorm.Model fields
   ID        uint           `gorm:"primaryKey"`
   CreatedAt time.Time
@@ -7,11 +7,11 @@ type {{ camelT .name }} struct {
 
 	// defined fields
 	{{ range .Fields -}}
-	{{ camelT .name }} {{ .type }}
+	{{ .Name }} {{ .Type }}
 	{{ end }}
 	// relations
 	{{ range .Reln -}}
-	{{ if eq .type "OwnedBy" }}{{ camelT .name }}ID uint{{end}}
-	{{ camelT .name }} {{ .goType }}
+	{{ if eq .Type "OwnedBy" }}{{ .Name }}ID uint{{end}}
+	{{ .Name }} {{ .GoType }}
 	{{ end }}
 }

@@ -1,52 +1,32 @@
-package demo
+package gen
 
 import (
-	"github.com/hofstadter-io/hof/schema/gen"
+	hof "github.com/hofstadter-io/hof/schema/gen"
+	"github.com/hofstadter-io/demos/schema"
 )
 
-// This is example usage of your generator
-DemoExample: #DemoGenerator & {
-	@gen(demo)
-
-	// inputs to the generator
-	Name:        "demo"
-	Module:      "github.com/hofstadter-io/demos"
-	"Datamodel": Datamodel
-
-	// other settings
-	Diff3:  true
-	Outdir: "./out/"
-
-	// watch settings
-	WatchGlobs: ["*.cue"]
-
-	// required by examples inside the same module
-	// your users do not set or see this field
-	PackageName: ""
-}
-
 // This is your reusable generator module
-#DemoGenerator: gen.#Generator & {
+#Generator: hof.#Generator & {
 
 	//
 	// user input fields
 	//
 
-	// most generators will want these 3 fields
 	Name:      string
 	Module:    string
-	Datamodel: #Datamodel
+	Datamodel: schema.#Datamodel
+	Config:    schema.#Config
 
 	//
 	// Internal Fields
 	//
 
-	// this is passed to the templates
 	In: {
 		// pass in full input
 		"Name":      Name
 		"Module":    Module
 		"Datamodel": Datamodel
+		"Config":    Config
 	}
 
 	// required for hof CUE modules to work
@@ -54,7 +34,7 @@ DemoExample: #DemoGenerator & {
 	PackageName: string | *"github.com/hofstadter-io/demos"
 
 	// The final list of files for hof to generate
-	Out: [...gen.#File] & [
+	Out: [...hof.#File] & [
 		for _, t in _onceFiles {t},
 		for _, t in _modelFiles {t},
 	]
@@ -70,10 +50,12 @@ DemoExample: #DemoGenerator & {
 
 	// templates rendered per elem, per code gen event
 	_modelFiles: [ for _, el in In.Datamodel.Models {
-		In: el
+		In: {
+			Model: el
+		}
 
 		TemplatePath: "model.go"
-		Filepath:     "pkg/{{ camel .Name }}.go"
+		Filepath:     "pkg/{{ camel .Model.Name }}.go"
 	}]
 
 	// so others can build on this

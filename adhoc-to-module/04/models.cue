@@ -5,34 +5,33 @@ package demo
 // by combining CUE and hof generators
 Datamodel: #Datamodel & {
 	// What's in a name?
-	Name: "demo"
-	Module: "github.com/hofstadter-io/demos"
+	Name:   "demo"
 
 	// Models in our datamodel
 	Models: {
 		// represents a blogger
 		User: {
 			Fields: {
-				name: type:  "string"
-				role: type:  "string"
-				email: type: "string"
+				Name: Type:  "string"
+				Role: Type:  "string"
+				Email: Type: "string"
 			}
 
 			Reln: {
-				Post: type: "HasMany"
+				Post: Type: "HasMany"
 			}
 		}
 
 		// represents a post
 		Post: {
 			Fields: {
-				title: type: "string"
-				content: type: "string"
-				draft: type: "bool"
+				Title: Type:   "string"
+				Content: Type: "string"
+				Draft: Type:   "bool"
 			}
 
 			Reln: {
-				User: type: "OwnedBy"
+				User: Type: "OwnedBy"
 			}
 		}
 	}
@@ -43,33 +42,31 @@ Datamodel: #Datamodel & {
 // or otherwise transform the input in interesting ways
 #Datamodel: {
 	// metadata
-	Name: string
-	Module: string
+	Name:   string
 
 	// the actual datamodel
 	Models: {
 		[M=string]: {
 			// give everything names
-			name: M
+			Name: M
 			Fields: {
-				[F=string]: { name: F, ... }
+				[F=string]: {Name: F, ...}
 			}
-			Reln: [R=string]: { name: R, ... }
+			Reln: [R=string]: {Name: R, ...}
 			// map reln type to go type
 			Reln: [R=string]: {
 				// restrict reln types
-				type: "OwnedBy" | "HasOne" | "HasMany" | "ManyToMany"
+				Type: "OwnedBy" | "HasOne" | "HasMany" | "ManyToMany"
 				// goType from type with faux switch statement
-				goType: [
-					if type == "OwnedBy" { R }
-					if type == "HasOne"  { R }
-					if type == "HasMany"  { "[]\(R)" }
-					if type == "ManyToMany"  { "[]\(R)" }
-					"panic, unknown Reln.type for \(R)"
-				][0] // this is the key to the faux switch
+				GoType: [
+					if Type == "OwnedBy" {R},
+					if Type == "HasOne" {R},
+					if Type == "HasMany" {"[]\(R)"},
+					if Type == "ManyToMany" {"[]\(R)"},
+					"panic, unknown Reln.Type for \(R)",
+				][0]    // this is the key to the faux switch
 			}
 			...
 		}
 	}
 }
-

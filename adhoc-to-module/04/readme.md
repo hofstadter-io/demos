@@ -14,9 +14,15 @@ hof gen ... --as-module github.com/username/demo
 hof gen -w
 ```
 
+The output from conversion can be found under [./orig/demo.cue](./orig/demo.cue).
+The final form is the [demo.cue](./demo.cue) found in this directory. 
+
 ## code changes
 
-- set module name
+The code in the repo is the final code of this section.
+These are the changes to make to get from 03 to here.
+
+- set module name, move out of datamodel, update templates
 - move templates to own dir, like partials
 - remove a lot of generator config, use defaults
 - add static/* without change
@@ -40,3 +46,26 @@ go build -o app ./out/cmd/app
 ./app alive
 ```
 
+### Final directory tree
+
+```text
+adhoc-to-module/04/
+├── readme.md
+├── demo.cue
+├── models.cue
+├── orig
+│   └── demo.cue
+├── partials
+│   ├── handler.go
+│   ├── lib.go
+│   └── struct.go
+├── static
+│   ├── LICENSE
+│   └── readme.md
+└── templates
+    ├── main.go
+    ├── model.go
+    └── pkg.go
+
+4 directories, 12 files
+```

@@ -9,20 +9,20 @@ import (
 // by combining CUE and hof generators
 App: demo.#Datamodels & {
 
-	Name: "app"
+	Name:   "app"
 	Module: "github.com/hofstadter-io/demos/full-stack-app"
 
 	Models: {
 		// represents a band
 		Band: {
 			Fields: {
-				name: type: "string"
+				name: type:  "string"
 				genre: type: "string"
 			}
 
 			Reln: {
 				Album: type: "HasMany"
-				Date: type: "HasMany"
+				Date: type:  "HasMany"
 			}
 		}
 
@@ -30,7 +30,7 @@ App: demo.#Datamodels & {
 		Album: {
 			Fields: {
 				title: type: "string"
-				year:  type: "string"
+				year: type:  "string"
 			}
 
 			Reln: {
@@ -41,7 +41,7 @@ App: demo.#Datamodels & {
 		// represents a tour date
 		Date: {
 			Fields: {
-				location: type: "string"
+				location: type:  "string"
 				eventTime: type: "datetime"
 			}
 

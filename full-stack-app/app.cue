@@ -9,11 +9,11 @@ App: demo.#DemoGenerator & {
 	@gen(app)
 
 	// inputs to the generator
-	Name: "app"
+	Name:   "app"
 	Module: "github.com/verdverm/app"
 
 	// add our datamodel
-	"Datamodel": Datamodel,
+	"Datamodel": Datamodel
 
 	// other settings
 	Outdir: "./out/"

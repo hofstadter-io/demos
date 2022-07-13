@@ -1,7 +1,7 @@
-{{ $ModelName := camelT .name }}
-func Create{{ $ModelName }}(in *{{ $ModelName }}) (*{{ $ModelName }}, error) {
-	t := &{{ $ModelName }}{
-		{{ range .Fields }}{{ camelT .name }}: in.{{ camelT .name }},
+{{ $ModelName := camelT .Name }}
+func create{{ $ModelName }}(in *{{ .Name }}) (*{{ .Name }}, error) {
+	t := &{{ .Name }}{
+		{{ range .Fields }}{{ .Name }}: in.{{ .Name }},
 		{{ end }}
 	} 
 	res := db.Create(t)
@@ -11,29 +11,29 @@ func Create{{ $ModelName }}(in *{{ $ModelName }}) (*{{ $ModelName }}, error) {
 	return t, nil
 }
 
-func List{{ $ModelName }}() ([]*{{ $ModelName }}, error) {
-	out := make([]*{{ $ModelName }},0)
+func list{{ $ModelName }}() ([]*{{ .Name }}, error) {
+	out := make([]*{{ .Name }},0)
 	res := db.Find(&out)
 	return out, res.Error
 }
 
-func Get{{ $ModelName }}ByID(id string) (*{{ $ModelName }}, error) {	
-	out := new({{ $ModelName }})
+func get{{ $ModelName }}ByID(id string) (*{{ .Name }}, error) {	
+	out := new({{ .Name }})
 	res := db.First(&out, id)
 	return out, res.Error
 }
 
-func Update{{ $ModelName }}(id string, up *{{ $ModelName }}) error {
-	t := &{{ $ModelName }}{
-		{{ range .Fields }}{{ camelT .name }}: up.{{ camelT .name }},
+func update{{ $ModelName }}(id string, up *{{ .Name }}) error {
+	t := &{{ .Name }}{
+		{{ range .Fields }}{{ .Name }}: up.{{ .Name }},
 		{{ end }}
 	}
 	res := db.Model(up).Where("ID = ?", id).Updates(t)
 	return res.Error
 }
 
-func Delete{{ $ModelName }}(id string) error {
-	res := db.Delete(&{{ $ModelName }}{}, id)
+func delete{{ $ModelName }}(id string) error {
+	res := db.Delete(&{{ .Name }}{}, id)
 	return res.Error
 }
 

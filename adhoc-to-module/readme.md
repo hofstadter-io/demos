@@ -14,11 +14,11 @@ You'll want to pick a name and repo so you can have the format
 
 `github.com/<username>/<name>`
 
-The walkthrough uses `demo` as the app name
+#### The walkthrough uses `demo` as the app name
 
 ```sh
 mkdir demo && cd demo
-touch types.{cue,go}
+touch models.{cue,go}
 ```
 
 - [01 - start using `hof gen`](./01/)

@@ -5,10 +5,12 @@ to our applications without needing to code it every time.
 This is what we will see in this section.
 
 1. Reorg some code to setup for easy additions
+1. Reorg the generator defintion and usage
 2. Make the new features and update our demo app
 
-## Reorganize partial templates
 
+
+## Reorganize partial templates
 
 ### 1. add new type partials for new capabilites
 
@@ -64,9 +66,21 @@ types.go
 templates/
   main.go
 	pkg.go
-	type.go
+	model.go
 ```
 
+## Reorganize the generator CUE and usage
+
+Schema:
+
+- add `schema` dir, move #Datamodel
+- update imports
+
+Generator:
+
+- move defs to `gen/demo.cue`
+- add #DemoConfig
+- add config to usage
 
 ## Making enhancemnts easily, for the last time
 
@@ -92,17 +106,57 @@ the input to code gen is more than a data model, it's a dm++
 ## Enhancements to this demo
 
 - unique email
-- apikeys
 - graceful shutdown
-- others echo/gorm things?
-- config? (viper?), (CUE?) (watch / reload)
-- extras
-  - cli tool (cobra)
-  - client/{go}
+- client/{go} for API calls as pkg
+- cli tool (cobra)
+- apikeys
 - seed data
 
+### Unique Email
 
-## Regen, rebuild, retest
+There will be code we want to generate that
+requires more context than the current Datamodel provides.
+Fortunately, it is highly extensible and you can add
+any extra schema, config, and defaults you want.
+
+1. add extra metadata / config to Field in Datamodel, as a layer on top of Datamodel
+1. set email to be unique
+1. update struct.go partial to add go struct tag that Gorm understands
+
+### Graceful shutdown
+
+Just add some code to one partial
+
+### Go API Client
+
+Just need to fill in the partial template.
+Will test using the CLI we add next...
+
+
+### CLI and Commands
+
+- add `"github.com/spf13/cobra"` as import in `type.go` and `pkg.go` templates
+
+
+We can now see how the same types are used and updated
+on both the server and client.
+
+### Apikey
+
+1. Add new field to user
+1. Add middleware to Echo
+1. Check API key and add calling User to echo.Context
+1. Ensure users only modify thier own data
+1. Add admin permission to CRUD other users
+
+Want to show how we update across the stack
+when adding new features...
+
+### Add some other fields
+
+...but not when modifying the datamodel
+
+## Regen, Rebuild, Retest
 
 ```sh
 # regen if you aren't -w'n

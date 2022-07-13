@@ -1,21 +1,23 @@
-package {{ camel .Datamodel.Name }}
+package {{ .Datamodel.Name }}
 
 import (
 	"gorm.io/gorm"
 )
 
 {{ range .Datamodel.Models }}
-type {{ camelT .name }} struct {
+type {{ .Name }} struct {
 	// ORM fields
 	gorm.Model
 
 	// defined fields
 	{{ range .Fields -}}
-	{{ camelT .name }} {{ .type }}
+	{{ .Name }} {{ .Type }}
 	{{ end }}
+
 	// relations
 	{{ range .Reln -}}
-	{{ camelT .name }} {{ .goType }}
+	{{ if eq .Type "OwnedBy" }}{{ .Name }}ID uint{{end}}
+	{{ .Name }} {{ .GoType }}
 	{{ end }}
 }
 {{ end }}

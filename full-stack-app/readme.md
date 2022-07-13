@@ -6,6 +6,15 @@ With the code published and tagged,
 anyone can now use it to make a
 full-stack app with their own data model.
 
+---
+dev notes...
+
+1. show using section 01
+2. skip frontend walkthrough here, just do second import & regen
+3. build frontend in later section here, after the reader uses it here without the details
+
+This should show both end-user cases
+
 
 ### new app with different types
 
@@ -42,11 +51,11 @@ This is where we put the generator usage
 package app
 
 import (
-	"github.com/username/demo"
+	"github.com/username/demo/gen"
 )
 
 // This is using your generator
-App: demo.#DemoGenerator & {
+App: gen.#DemoGenerator & {
 	@gen(app)
 
 	// inputs to the generator
@@ -54,7 +63,13 @@ App: demo.#DemoGenerator & {
 	Module: "github.com/username/app"
 
 	// add our datamodel
-	"Types": Types,
+	"Datamodel": Datamodel,
+
+	// Set Config inline
+	Config: {
+		About: "a music band app"
+		Help: About
+	}
 
 	// other settings
 	Outdir: "./out/"
@@ -74,7 +89,7 @@ package app
 // This is the core data model
 // whish is augmented and extended
 // by combining CUE and hof generators
-Types: #Type & {
+Datamodel: #Type & {
 
 	// represents a band
 	Band: {

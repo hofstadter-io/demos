@@ -14,14 +14,14 @@ var db *gorm.DB
 
 func InitDB() (err error) {
 	// Create db connection
-	db, err = gorm.Open(sqlite.Open("{{ .Name }}.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("{{ .Datamodel.Name }}.db"), &gorm.Config{})
   if err != nil {
 		return fmt.Errorf("failed to connect database:\n%s", err)
   }
 
   // Migrate the schema
-	{{ range .Types -}}
-  err = db.AutoMigrate(&{{ camelT .name }}{})
+	{{ range .Datamodel.Models -}}
+  err = db.AutoMigrate(&{{ .Name }}{})
   if err != nil {
 		return fmt.Errorf("failed to migrate database:\n%s", err)
   }
@@ -42,12 +42,12 @@ func SetupRouter(e *echo.Echo) {
 	})
 
 	// Setup api routes
-	{{- range .Types -}}
-	{{- $TypeName := camelT .name }}
-	e.POST("/{{ kebab .name }}", HandleCreate{{ $TypeName }})
-	e.GET("/{{ kebab .name }}", HandleList{{ $TypeName }})
-	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $TypeName }})
-	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $TypeName }})
-	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $TypeName }})
+	{{- range .Datamodel.Models -}}
+	{{ $ModelName := camelT .Name }}
+	e.POST("/{{ kebab .Name }}", handleCreate{{ $ModelName }})
+	e.GET("/{{ kebab .Name }}", handleList{{ $ModelName }})
+	e.GET("/{{ kebab .Name }}/:id", handleGet{{ $ModelName }})
+	e.PUT("/{{ kebab .Name }}/:id", handleUpdate{{ $ModelName }})
+	e.DELETE("/{{ kebab .Name }}/:id", handleDelete{{ $ModelName }})
 	{{- end }}
 }

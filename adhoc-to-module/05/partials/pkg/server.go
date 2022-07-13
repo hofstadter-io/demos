@@ -1,5 +1,33 @@
+func RunServer() {
+	if err := runServer(); err != nil {
+    fmt.Println(err)
+    os.Exit(1)
+  }
+}
 
-func SetupRouter(e *echo.Echo) {
+func runServer() error {
+	// Setup the DB
+	if err := initDB(); err != nil {
+		return err
+  }
+
+	// Create the server
+	e := echo.New()
+	setupRouter(e)
+
+	// get and format port
+	port := "4242"
+	if p := os.Getenv("PORT"); p != "" {
+		port = p
+	}
+	port = ":" + port
+	fmt.Println("{{ .Datamodel.Name }} listening on" + port)
+
+	// run until we find the bottom turtle
+	return e.Start(port)
+}
+
+func setupRouter(e *echo.Echo) {
 	// setup recovery middleware
 	e.Use(middleware.Recover())
 
@@ -12,36 +40,12 @@ func SetupRouter(e *echo.Echo) {
 
 	// Setup api routes
 	{{- range .Datamodel.Models -}}
-	{{- $ModelName := camelT .name }}
-	e.POST("/{{ kebab .name }}", HandleCreate{{ $ModelName }})
-	e.GET("/{{ kebab .name }}", HandleList{{ $ModelName }})
-	e.GET("/{{ kebab .name }}/:id", HandleGet{{ $ModelName }})
-	e.PUT("/{{ kebab .name }}/:id", HandleUpdate{{ $ModelName }})
-	e.DELETE("/{{ kebab .name }}/:id", HandleDelete{{ $ModelName }})
+	{{- $ModelName := camelT .Name }}
+	e.POST("/{{ kebab .Name }}", handleCreate{{ $ModelName }})
+	e.GET("/{{ kebab .Name }}", handleList{{ $ModelName }})
+	e.GET("/{{ kebab .Name }}/:id", handleGet{{ $ModelName }})
+	e.PUT("/{{ kebab .Name }}/:id", handleUpdate{{ $ModelName }})
+	e.DELETE("/{{ kebab .Name }}/:id", handleDelete{{ $ModelName }})
 	{{- end }}
 }
 
-func RunServer() error {
-	// Setup the DB
-	if err := InitDB(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-  }
-
-	// Create the server
-	e := echo.New()
-	SetupRouter(e)
-
-	// get and format port
-	port := "4242"
-	if p := os.Getenv("PORT"); p != "" {
-		port = p
-	}
-	port = ":" + port
-	fmt.Println("{{ .Datamodel.Name }} listening on" + port)
-
-	// run until we find the bottom turtle
-	e.Logger.Fatal(e.Start(port))
-
-	return nil
-}

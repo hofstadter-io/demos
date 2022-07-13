@@ -1,15 +1,16 @@
-package {{ camel .Datamodel.Name }}
+package {{ .Datamodel.Name }}
 
 {{ range .Datamodel.Models }}
-type {{ camelT .name }} struct {
+type {{ .Name }} struct {
 	// defined fields
 	{{ range .Fields -}}
-	{{ camelT .name }} {{ .type }}
+	{{ .Name }} {{ .Type }}
 	{{ end }}
 
 	// relations
 	{{ range .Reln -}}
-	{{ camelT .name }} {{ .goType }}
+	{{ if eq .Type "OwnedBy" }}{{ .Name }}ID uint{{end}}
+	{{ .Name }} {{ .GoType }}
 	{{ end }}
 }
 {{ end }}
