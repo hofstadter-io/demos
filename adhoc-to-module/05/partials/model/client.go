@@ -1,4 +1,3 @@
-{{ if .Config.Client.go.enabled }}
 {{ $ModelName := camelT .Name }}
 func {{ $ModelName }}Create() {
 
@@ -15,5 +14,3 @@ func {{ $ModelName }}Update(id string) {
 func {{ $ModelName }}Delete(id string) {
 
 }
-{{ end }}
-

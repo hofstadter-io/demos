@@ -7,7 +7,7 @@ The below shows various ways to invoke
 
 1. show at cli, write to file
 1. watch, update, hot reload
-1. NewType func, default role
+1. Show new fields / types being added (comments, many-2-many support)
 1. diff3 & custom code
 
 ```sh
