@@ -13,3 +13,6 @@ type {{ .Name }} struct {
 	{{ end }}
 }
 {{ end }}
+// comment at the edge of code gen loop
+// help prevent git like merge conflicts
+// with custom code in diff3 mode

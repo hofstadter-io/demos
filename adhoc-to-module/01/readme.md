@@ -29,6 +29,10 @@ hof gen models.cue -O out -T models.go -w --diff3
 
 ### models.go
 
+<!--
+cat adhoc-to-module/01/models.go
+-->
+
 ```go
 package {{ .Datamodel.Name }}
 
@@ -45,11 +49,52 @@ type {{ .Name }} struct {
 	{{ end }}
 }
 {{ end }}
+// comment at the edge of code gen loop
+// help prevent git like merge conflicts
+// with custom code in diff3 mode
+```
+
+### out/models.go
+
+<!--
+cat adhoc-to-module/01/out/models.go
+-->
+
+```go
+package demo
+
+type Post struct {
+	// defined fields
+	Content string
+	Draft   bool
+	Title   string
+
+	// relations
+	User User
+}
+
+type User struct {
+	// defined fields
+	Email string
+	Name  string
+	Role  string
+
+	// relations
+	Post []Post
+}
+
+// comment at the edge of code gen loop
+// help prevent git like merge conflicts
+// with custom code in diff3 mode
 ```
 
 ### models.cue
 
 We will use this `Datamodel` throughout the numbered subsections.
+
+<!--
+cat adhoc-to-module/01/models.cue
+-->
 
 ```cue
 package demo

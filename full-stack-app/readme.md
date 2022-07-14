@@ -18,6 +18,10 @@ This should show both end-user cases
 
 ### new app with different types
 
+Let's make an app called `jamr`
+which tracks bands and their
+albums and tour dates.
+
 #### setup a working dir
 
 ```sh
