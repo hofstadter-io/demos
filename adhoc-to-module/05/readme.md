@@ -7,7 +7,7 @@ We also want to make it easier to develop
 our generators as a module author.
 This is what we will see in this section.
 
-1. First, make our life easy with some `hof/flow` to dual watch, code gen, and build
+1. First, make our life easy with some `hof/flow`
 1. Reorg some code to setup for easy additions
 1. Reorg the generator defintion and usage
 1. Make the new features and update our demo app
@@ -29,7 +29,7 @@ go build ./cmd/demo/
 ./demo serve
 
 # test the go client
-./demo get user --email tony@hof.io
+./demo user list
 ```
 
 Let's use `hof/flow` to regen and rebuild as changes happen.
@@ -38,16 +38,21 @@ Then we only need to run the server
 
 ### Using hof/flow to watch code gen and perform post actions
 
-You can use `hof/flow` to run
+You can use the `hof flow` command to run
 `hof gen` and `go build` in parallel watches.
 When a change happens it triggers a
 and cascading regen, rebuild sequence.
 You can run anything post code gen like this.
+See the [hof flow docs](https://docs.hofstadter.io/reference/hof-flow/)
+to lrean more.
 
 Adding the following to `demo.cue`
 will build a `./demo` binary on change.
+With this in place and running, we can
+just run our `./demo` application as needed,
+when we implement the CLI later in this section.
 
-Run `hof flow @watch`
+Run `hof flow @watch` to start the dual hot-reload.
 
 ```cue
 watch: {
@@ -90,7 +95,6 @@ watch: {
 	}
 }
 ```
-
 
 ## Reorganize partial templates
 
