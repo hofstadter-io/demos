@@ -1,4 +1,4 @@
-# 07 - the even more oncore
+# 07 - even more in an encore
 
 - add comments
 - prometheus metrics

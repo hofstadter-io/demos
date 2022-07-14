@@ -27,4 +27,4 @@ touch models.{cue,go}
 - [04 - create a reusable module](./04/)
 - [05 - enhancing the api server](./05/)
 - [06 - sharing your module](./06/)
-
+- [07 - even more in an encore](./07/)
