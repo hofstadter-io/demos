@@ -1,13 +1,95 @@
-# 05 - enhancing the api server
+# 05 - enhancing the application
 
-We want to add more features and advanced capabilites
-to our applications without needing to code it every time.
+This section shows you how to
+add more features and advanced capabilites
+to your applications with `hof` generators.
+We also want to make it easier to develop
+our generators as a module author.
 This is what we will see in this section.
 
+1. First, make our life easy with some `hof/flow` to dual watch, code gen, and build
 1. Reorg some code to setup for easy additions
 1. Reorg the generator defintion and usage
-2. Make the new features and update our demo app
+1. Make the new features and update our demo app
 
+## Watch, Regen, Rebuild, Use
+
+First, let's make our life easier.
+While we could run the following
+
+```sh
+# regen if you aren't -w'n
+hof gen
+
+# go into output and rebuild
+cd ./out
+go build ./cmd/demo/
+
+# run the server
+./demo serve
+
+# test the go client
+./demo get user --email tony@hof.io
+```
+
+Let's use `hof/flow` to regen and rebuild as changes happen.
+Then we only need to run the server
+
+
+### Using hof/flow to watch code gen and perform post actions
+
+You can use `hof/flow` to run
+`hof gen` and `go build` in parallel watches.
+When a change happens it triggers a
+and cascading regen, rebuild sequence.
+You can run anything post code gen like this.
+
+Adding the following to `demo.cue`
+will build a `./demo` binary on change.
+
+Run `hof flow @watch`
+
+```cue
+watch: {
+	// this is what @watch matches
+	@flow(watch)
+
+	// (1) and (2) run in parallel, you could have more
+	
+	// (1) run code gen with watch enabled there
+	gen: {
+		@task(os.Exec)
+		cmd: ["hof", "gen", "-w"]
+		exitcode: _
+	}
+
+	// (2) run build and tell user when done
+	builder: {
+		@task(os.Watch)
+		globs: ["out/*"]
+
+		// this is a hof/flow run on output change
+		handler: {
+			event?: _
+			build: {
+				@task(os.Exec)
+				cmd: ["bash", "-c", "cd out && go build -o ../demo ./cmd/demo"]
+				exitcode: _
+			}
+			now: {
+				dep: build.exitcode
+				n:   string @task(gen.Now)
+				s:   "\(n) (\(dep))"
+			}
+			alert: {
+				@task(os.Stdout)
+				dep:  now.s
+				text: "demo rebuilt \(now.s)\n"
+			}
+		}
+	}
+}
+```
 
 
 ## Reorganize partial templates
@@ -111,6 +193,61 @@ the input to code gen is more than a data model, it's a dm++
 - client/{go} for API calls as pkg
 - cli tool (cobra)
 - seed data
+
+### directory structue after updates
+
+<!--
+tree adhoc-to-module/05/ -I cue.mod
+-->
+
+```text
+adhoc-to-module/05/
+├── cue.mods
+├── cue.sums
+├── demo.cue
+├── gen
+│   └── demo.cue
+├── out
+│   ├── cmd
+│   │   └── demo
+│   │       └── main.go
+│   ├── demo.db
+│   ├── go.mod
+│   ├── go.sum
+│   ├── pkg
+│   │   ├── pkg.go
+│   │   ├── post.go
+│   │   └── user.go
+│   └── readme.md
+├── partials
+│   ├── model
+│   │   ├── client.go
+│   │   ├── command.go
+│   │   ├── handler.go
+│   │   ├── lib.go
+│   │   └── struct.go
+│   └── pkg
+│       ├── cli.go
+│       ├── db.go
+│       └── server.go
+├── readme.md
+├── schema
+│   ├── config.cue
+│   └── datamodel.cue
+├── seed
+│   └── data.cue
+├── static
+│   └── readme.md
+├── templates
+│   ├── main.go
+│   ├── model.go
+│   └── pkg.go
+└── types.cue
+
+12 directories, 29 files
+```
+
+
 
 ### Calculated fields
 
@@ -242,29 +379,14 @@ func {{ $ModelName }}Update(id string, input map[string]any) (*{{ .Name }}, erro
 - handle create/update data and model id as args
 
 ```
-./demo user create Name=bob Email=bob@hof.io Role=admin
-./demo user update 3 Role=usr
-./demo user get 3
+./demo user create Name=tony Email=tony@hof.io Role=admin
+./demo user update 1 Role=usr
+./demo user get 1
 ```
 
 The same types are used and updated
 on both the server / client divide.
 They are now unified.
-
-### Apikey
-
-1. Add new field to user
-1. Add middleware to Echo
-1. Check API key and add calling User to echo.Context
-1. Ensure users only modify thier own data
-1. Add admin permission to CRUD other users
-
-Want to show how we update across the stack
-when adding new features...
-
-### Add some other fields
-
-...but not when modifying the datamodel
 
 ### Seed data
 
@@ -272,131 +394,8 @@ See `partials/pkg/db.go` for additions
 
 See `seed/*`
 
-## Regen, Rebuild, Retest
-
-```sh
-# regen if you aren't -w'n
-hof gen
-cd ./out
-go build ./cmd/demo/
-
+```
 # seed the database
 cue export ../seed/data.cue -o seed.json
 ./demo seed seed.json
-
-# run the server
-./demo serve
-
-# test the go client
-./demo get user --email tony@hof.io
 ```
-
-## directory structue after updates
-
-<!--
-tree adhoc-to-module/05/ -I cue.mod
--->
-
-```text
-adhoc-to-module/05/
-├── cue.mods
-├── cue.sums
-├── demo.cue
-├── gen
-│   └── demo.cue
-├── out
-│   ├── cmd
-│   │   └── demo
-│   │       └── main.go
-│   ├── demo.db
-│   ├── go.mod
-│   ├── go.sum
-│   ├── pkg
-│   │   ├── pkg.go
-│   │   ├── post.go
-│   │   └── user.go
-│   └── readme.md
-├── partials
-│   ├── model
-│   │   ├── client.go
-│   │   ├── command.go
-│   │   ├── handler.go
-│   │   ├── lib.go
-│   │   └── struct.go
-│   └── pkg
-│       ├── cli.go
-│       ├── db.go
-│       └── server.go
-├── readme.md
-├── schema
-│   ├── config.cue
-│   └── datamodel.cue
-├── seed
-│   └── data.cue
-├── static
-│   └── readme.md
-├── templates
-│   ├── main.go
-│   ├── model.go
-│   └── pkg.go
-└── types.cue
-
-12 directories, 29 files
-```
-
-
-## Using hof/flow to watch code gen and perform post actions
-
-You can use `hof/flow` to run
-`hof gen` and `go build` in parallel watches.
-When a change happens it triggers a
-and cascading regen, rebuild sequence.
-You can run anything post code gen like this.
-
-Adding the following to `demo.cue`
-will build a `./demo` binary on change.
-
-Run `hof flow @watch`
-
-```cue
-watch: {
-	// this is what @watch matches
-	@flow(watch)
-
-	// (1) and (2) run in parallel, you could have more
-	
-	// (1) run code gen with watch enabled there
-	gen: {
-		@task(os.Exec)
-		cmd: ["hof", "gen", "-w"]
-		exitcode: _
-	}
-
-	// (2) run build and tell user when done
-	builder: {
-		@task(os.Watch)
-		globs: ["out/*"]
-
-		// this is a hof/flow run on output change
-		handler: {
-			event?: _
-			build: {
-				@task(os.Exec)
-				cmd: ["bash", "-c", "cd out && go build -o ../demo ./cmd/demo"]
-				exitcode: _
-			}
-			now: {
-				dep: build.exitcode
-				n:   string @task(gen.Now)
-				s:   "\(n) (\(dep))"
-			}
-			alert: {
-				@task(os.Stdout)
-				dep:  now.s
-				text: "demo rebuilt \(now.s)\n"
-			}
-		}
-	}
-}
-```
-

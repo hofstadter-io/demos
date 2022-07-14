@@ -34,16 +34,19 @@ These are the changes to make to get from 03 to here.
 hof mod vendor cue
 hof gen
 
+# cd to app code
+cd out
+
 # go deps
 go mod init github.com/username/demo
 go mod tidy
 
 # build app
-go build -o app ./out/cmd/app
+go build ./cmd/demo
 
 # test it
-./app serve
-./app alive
+./demo serve
+./demo alive
 ```
 
 ### Final directory tree

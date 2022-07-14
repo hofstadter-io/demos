@@ -25,6 +25,6 @@ touch models.{cue,go}
 - [02 - scaffold with data + templates](./02/)
 - [03 - rotate the template structures](./03/)
 - [04 - create a reusable module](./04/)
-- [05 - enhancing the api server](./05/)
+- [05 - enhancing the application](./05/)
 - [06 - sharing your module](./06/)
 - [07 - even more in an encore](./07/)
