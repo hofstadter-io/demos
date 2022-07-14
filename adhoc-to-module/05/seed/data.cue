@@ -1,23 +1,35 @@
-users: {
+Users: [ for _, u in _users { u }]
+_users: {
 	// the cast
-	tony: role:     "owner"
-	doug: role:     "admin"
-	tortoise: role: "user"
-	achilles: role: "user"
-
-	// extra / metadata
-	tony: extra:     "worm"
-	doug: extra:     "geb"
-	tortoise: extra: "reconfiguring record"
-	achilles: extra: "the (w)heelie mic drop"
+	tony: Role:     "owner"
+	doug: Role:     "admin"
+	tortoise: Role: "user"
+	achilles: Role: "user"
 
 	// enrich, extend, validate
 	[n=string]: {
 		// nest key as name
-		name: n
+		Name: n
 		// construct email
-		email: "\(n)@hof.io"
+		Email: "\(n)@hof.io"
 		// restrict role values
-		role: "owner" | "admin" | "user"
+		Role: "owner" | "admin" | "user"
 	}
+
+	tony: Posts: [{
+		Title: "hello world"
+		Content: "my first post"
+	},{
+		Title: "ipsum lorem"
+		Content: "beep boop bop"
+	}]
+
+	doug: Posts: [{
+		Title: "My favorite pokemon"
+		Content: "it's MIU, if you don't get it, read GEB"
+	}]
+	achilles: Posts: [{
+		Title: "they got me"
+		Content: "damn archers, not sure i'll ever run again Mr. T"
+	}]
 }

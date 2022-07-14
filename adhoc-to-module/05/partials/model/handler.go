@@ -43,8 +43,7 @@ func handleUpdate{{ $ModelName }}(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	data := map[string]any{ "updated": id }
-	return c.JSON(http.StatusOK, data)
+	return c.JSON(http.StatusOK, in)
 }
 
 func handleDelete{{ $ModelName }}(c echo.Context) error {

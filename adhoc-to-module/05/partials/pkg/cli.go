@@ -7,7 +7,11 @@ func RunCLI() {
 }
 
 func init() {
+	// common commands
 	rootCmd.AddCommand(serverCommand)
+	rootCmd.AddCommand(seedCommand)
+
+	// model commands
 	{{ range .Datamodel.Models -}}
 	rootCmd.AddCommand({{ camel .Name }}Command)
 	{{ end }}
@@ -18,6 +22,10 @@ var rootCmd = &cobra.Command{
   Short: "{{ .Config.About }}",
   Long: `{{ .Config.Help }}`,
 }
+
+const rootLong = `
+	{{ .Config.Help }}
+`
 
 var serverCommand = &cobra.Command{
 	Use: "server",
@@ -31,7 +39,4 @@ var serverCommand = &cobra.Command{
   },
 }
 
-const rootLong = `
-	{{ .Config.Help }}
-`
 {{ end }}

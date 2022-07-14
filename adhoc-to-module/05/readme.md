@@ -105,12 +105,50 @@ the input to code gen is more than a data model, it's a dm++
 
 ## Enhancements to this demo
 
+- calculated fields
 - unique email
 - graceful shutdown
 - client/{go} for API calls as pkg
 - cli tool (cobra)
-- apikeys
 - seed data
+
+### Calculated fields
+
+- Model.isOwned
+- PluralName on {Model, Reln}
+
+in `schema/datamodel.cue`
+
+```cue
+#Datamodel: {
+	Models: [M=string]: {
+		// plural versions of Name
+		Name: string
+		PluralName: string | *"\(Name)s"
+		Reln: [R=string]: {
+			Name: string
+			PluralName: string | *"\(Name)s"
+		}
+
+		// calculated fields
+		isOwned: bool | *false
+		for _, R in Reln if R.Type == "OwnedBy" {
+			isOwnded: true
+		}
+		...
+	}
+}
+```
+
+We can then use `{{ .PluralName }}` when creating
+field names in our output which will hold collections.
+
+```go
+type User struct {
+	// ...
+	Posts []Post
+}
+```
 
 ### Unique Email
 
@@ -123,23 +161,95 @@ any extra schema, config, and defaults you want.
 1. set email to be unique
 1. update struct.go partial to add go struct tag that Gorm understands
 
+Update Datamodel Schema:
+
 ### Graceful shutdown
 
-Just add some code to one partial
+Add code to `partials/pkg/server.go` based on:
+https://echo.labstack.com/cookbook/graceful-shutdown/
+
+replacing this line:
+
+```go
+func runServer() error {
+	// ...
+
+	// Start server
+	return e.Start(port)
+}
+```
+
+with:
+
+```go
+	// Start server
+	go func() {
+		if err := e.Start(port); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds. 
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+```
+
+Now all of our servers have graceful shutdown.
+We could expose the timeout
+through configuration at runtime
+or a command line flag.
+
 
 ### Go API Client
 
 Just need to fill in the partial template.
 Will test using the CLI we add next...
 
+We use `github.com/imroc/req/v3`
+
+Snippet from `partials/model/client.go`
+
+```go
+func {{ $ModelName }}Update(id string, input map[string]any) (*{{ .Name }}, error ) {
+	data := new({{.Name}})
+	url := host + "/{{ kebab .Name }}/{id}"
+	
+	client := req.C()
+	_, err := client.R().
+		SetPathParam("id", id).
+		SetBody(input).
+		SetResult(&data).
+		Put(url)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+```
 
 ### CLI and Commands
 
 - add `"github.com/spf13/cobra"` as import in `type.go` and `pkg.go` templates
+- handle create/update data and model id as args
 
+```
+./demo user create Name=bob Email=bob@hof.io Role=admin
+./demo user update 3 Role=usr
+./demo user get 3
+```
 
-We can now see how the same types are used and updated
-on both the server and client.
+The same types are used and updated
+on both the server / client divide.
+They are now unified.
 
 ### Apikey
 
@@ -156,19 +266,137 @@ when adding new features...
 
 ...but not when modifying the datamodel
 
+### Seed data
+
+See `partials/pkg/db.go` for additions
+
+See `seed/*`
+
 ## Regen, Rebuild, Retest
 
 ```sh
 # regen if you aren't -w'n
 hof gen
+cd ./out
+go build ./cmd/demo/
+
+# seed the database
+cue export ../seed/data.cue -o seed.json
+./demo seed seed.json
 
 # run the server
-./app serve
-./app alive
+./demo serve
 
 # test the go client
-./app seed data.cue
-./app get user --email tony@hof.io
+./demo get user --email tony@hof.io
 ```
 
+## directory structue after updates
+
+<!--
+tree adhoc-to-module/05/ -I cue.mod
+-->
+
+```text
+adhoc-to-module/05/
+├── cue.mods
+├── cue.sums
+├── demo.cue
+├── gen
+│   └── demo.cue
+├── out
+│   ├── cmd
+│   │   └── demo
+│   │       └── main.go
+│   ├── demo.db
+│   ├── go.mod
+│   ├── go.sum
+│   ├── pkg
+│   │   ├── pkg.go
+│   │   ├── post.go
+│   │   └── user.go
+│   └── readme.md
+├── partials
+│   ├── model
+│   │   ├── client.go
+│   │   ├── command.go
+│   │   ├── handler.go
+│   │   ├── lib.go
+│   │   └── struct.go
+│   └── pkg
+│       ├── cli.go
+│       ├── db.go
+│       └── server.go
+├── readme.md
+├── schema
+│   ├── config.cue
+│   └── datamodel.cue
+├── seed
+│   └── data.cue
+├── static
+│   └── readme.md
+├── templates
+│   ├── main.go
+│   ├── model.go
+│   └── pkg.go
+└── types.cue
+
+12 directories, 29 files
+```
+
+
+## Using hof/flow to watch code gen and perform post actions
+
+You can use `hof/flow` to run
+`hof gen` and `go build` in parallel watches.
+When a change happens it triggers a
+and cascading regen, rebuild sequence.
+You can run anything post code gen like this.
+
+Adding the following to `demo.cue`
+will build a `./demo` binary on change.
+
+Run `hof flow @watch`
+
+```cue
+watch: {
+	// this is what @watch matches
+	@flow(watch)
+
+	// (1) and (2) run in parallel, you could have more
+	
+	// (1) run code gen with watch enabled there
+	gen: {
+		@task(os.Exec)
+		cmd: ["hof", "gen", "-w"]
+		exitcode: _
+	}
+
+	// (2) run build and tell user when done
+	builder: {
+		@task(os.Watch)
+		globs: ["out/*"]
+
+		// this is a hof/flow run on output change
+		handler: {
+			event?: _
+			build: {
+				@task(os.Exec)
+				cmd: ["bash", "-c", "cd out && go build -o ../demo ./cmd/demo"]
+				exitcode: _
+			}
+			now: {
+				dep: build.exitcode
+				n:   string @task(gen.Now)
+				s:   "\(n) (\(dep))"
+			}
+			alert: {
+				@task(os.Stdout)
+				dep:  now.s
+				text: "demo rebuilt \(now.s)\n"
+			}
+		}
+	}
+}
+```
 

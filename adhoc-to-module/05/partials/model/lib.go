@@ -1,10 +1,14 @@
 {{ $ModelName := camelT .Name }}
 func create{{ $ModelName }}(in *{{ .Name }}) (*{{ .Name }}, error) {
+	// filter fields
 	t := &{{ .Name }}{
 		{{ range .Fields }}{{ .Name }}: in.{{ .Name }},
 		{{ end }}
 	} 
+	// create in db
 	res := db.Create(t)
+
+	// return results
 	if res.Error != nil {
 		return nil, res.Error
 	}

@@ -1,3 +1,10 @@
+var host string
+
+func init() {
+	host = "http://localhost:4242"
+	// req.DevMode()
+}
+
 func RunServer() {
 	if err := runServer(); err != nil {
     fmt.Println(err)
@@ -21,10 +28,28 @@ func runServer() error {
 		port = p
 	}
 	port = ":" + port
-	fmt.Println("{{ .Datamodel.Name }} listening on" + port)
 
-	// run until we find the bottom turtle
-	return e.Start(port)
+	// Start server
+	go func() {
+		fmt.Println("{{ .Datamodel.Name }} listening on" + port)
+		if err := e.Start(port); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds. 
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+	fmt.Println("{{ .Datamodel.Name }} exiting")
+
+	return nil
 }
 
 func setupRouter(e *echo.Echo) {

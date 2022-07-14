@@ -13,7 +13,11 @@ package schema
 			// give everything names
 			Name: M
 			Fields: {
-				[F=string]: {Name: F, ...}
+				[F=string]: {
+					Name: F
+					required: bool | *false
+					...
+				}
 			}
 			Reln: [R=string]: {Name: R, ...}
 			// map reln type to go type
@@ -28,7 +32,20 @@ package schema
 					if Type == "ManyToMany" {"[]\(R)"},
 					"panic, unknown Reln.Type for \(R)",
 				][0]    // this is the key to the faux switch
+
+				// optionally overriden calc'd fields
+				Name: string
+				PluralName: string | *"\(Name)s"
 			}
+
+			// calculated fields
+			isOwned: bool | *false
+			for _, R in Reln if R.Type == "OwnedBy" {
+				isOwnded: true
+			}
+
+			// optionally overriden calc'd fields
+			PluralName: string | *"\(Name)s"
 			...
 		}
 	}
