@@ -9,10 +9,12 @@ type {{ .Name }} struct {
 
 	// relations
 	{{ range .Reln -}}
-	{{ .Name }} {{ .GoType }}
+	{{ if eq .Type "OwnedBy" "HasOne" -}}
+	{{ .Name }} {{ .Name }}
+	{{ end -}}
+	{{ if eq .Type "HasMany" "ManyToMany" -}}
+	{{ .Name }} []{{ .Name }}
+	{{ end -}}
 	{{ end }}
 }
 {{ end }}
-// comment at the edge of code gen loop
-// help prevent git like merge conflicts
-// with custom code in diff3 mode

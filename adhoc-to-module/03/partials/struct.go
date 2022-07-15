@@ -1,5 +1,5 @@
 type {{ .Name }} struct {
-	// gorm.Model fields
+	// gorm fields
   ID        uint           `gorm:"primaryKey"`
   CreatedAt time.Time
   UpdatedAt time.Time
@@ -12,6 +12,11 @@ type {{ .Name }} struct {
 	// relations
 	{{ range .Reln -}}
 	{{ if eq .Type "OwnedBy" }}{{ .Name }}ID uint{{end}}
-	{{ .Name }} {{ .GoType }}
+	{{ if eq .Type "OwnedBy" "HasOne" -}}
+	{{ .Name }} {{ .Name }}
+	{{ end -}}
+	{{ if eq .Type "HasMany" "ManyToMany" -}}
+	{{ .Name }} []{{ .Name }}
+	{{ end -}}
 	{{ end }}
 }

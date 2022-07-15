@@ -1,8 +1,31 @@
 package demo
 
-// This is the core data model
-// whish is augmented and extended
-// by combining CUE and hof generators
+// Schema for a data model in CUE
+#Datamodel: { ... // keep open so user can add own fields
+	// metadata
+	Name:   string
+	Module: string
+
+	// a set of models
+	Models: [M=string]: { ...
+		// name everything for the user
+		Name: M
+		
+		// model fields
+		Fields: [F=string]: { ...
+			Name: F
+			Type: string
+		}
+
+		// relations to other models
+		Reln: [R=string]: { ...
+			Name: R
+			Type: "OwnedBy" | "HasOne" | "HasMany" | "ManyToMany"
+		}
+	}
+}
+
+// This is our demo data model
 Datamodel: #Datamodel & {
 	// What's in a name?
 	Name:   "demo"
@@ -14,8 +37,9 @@ Datamodel: #Datamodel & {
 		User: {
 			Fields: {
 				Name: Type:  "string"
-				Role: Type:  "string"
 				Email: Type: "string"
+				Email: unique: true
+				Role: Type:  "string"
 			}
 
 			Reln: {
@@ -34,41 +58,6 @@ Datamodel: #Datamodel & {
 			Reln: {
 				User: Type: "OwnedBy"
 			}
-		}
-	}
-}
-
-// Add schema or augment the data model for easier templating
-// Can be used to validate, enrich, and extend user input,
-// or otherwise transform the input in interesting ways
-#Datamodel: {
-	// metadata
-	Name:   string
-	Module: string
-
-	// the actual datamodel
-	Models: {
-		[M=string]: {
-			// give everything names
-			Name: M
-			Fields: {
-				[F=string]: {Name: F, ...}
-			}
-			Reln: [R=string]: {Name: R, ...}
-			// map reln type to go type
-			Reln: [R=string]: {
-				// restrict reln types
-				Type: "OwnedBy" | "HasOne" | "HasMany" | "ManyToMany"
-				// goType from type with faux switch statement
-				GoType: [
-					if Type == "OwnedBy" {R},
-					if Type == "HasOne" {R},
-					if Type == "HasMany" {"[]\(R)"},
-					if Type == "ManyToMany" {"[]\(R)"},
-					"panic, unknown Reln.Type for \(R)",
-				][0]    // this is the key to the faux switch
-			}
-			...
 		}
 	}
 }
