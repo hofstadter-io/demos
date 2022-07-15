@@ -78,6 +78,9 @@ var seedCommand = &cobra.Command{
 	Short: "seeds the database",
 	Long: seedLongHelp,
   RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 {
+			return fmt.Errorf("no seed json files provided")
+		}
 		for _, arg := range args {
 			if err := seedDB(arg); err != nil {
 				return err

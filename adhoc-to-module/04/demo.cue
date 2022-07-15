@@ -18,7 +18,7 @@ DemoExample: #DemoGenerator & {
 	Outdir: "./out/"
 
 	// watch settings
-	WatchGlobs: ["*.cue"]
+	WatchFull: ["*.cue"]
 
 	// required by examples inside the same module
 	// your users do not set or see this field

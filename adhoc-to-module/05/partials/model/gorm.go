@@ -1,1 +1,1 @@
-{{- if .required }}gorm:"unique"{{ end -}}
+{{- if .unique }}gorm:"unique"{{ end -}}
