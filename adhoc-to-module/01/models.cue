@@ -38,7 +38,6 @@ Datamodel: #Datamodel & {
 			Fields: {
 				Name: Type:  "string"
 				Email: Type: "string"
-				Email: unique: true
 				Role: Type:  "string"
 			}
 
