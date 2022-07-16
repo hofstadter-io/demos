@@ -1,25 +1,5 @@
 # 02 - scaffold with data + templates
 
-Shows how use several templates
-with a single datamodel input
-to create the implementation around
-the language types and through the call stack.
-
-Add the following files:
-
-- db.go (Gorm)
-- lib (helpers/type functions)
-- handlers (Echo)
-- defaults, common db fields
-
-```sh
-hof gen models.cue -w --diff3 -O out \
-  -T models.go -T db.go -T libs.go -T handlers.go
-```
-
-
-### Final directory tree
-
 ```text
 adhoc-to-module/02/
 ├── db.go

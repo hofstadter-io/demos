@@ -16,7 +16,7 @@ type {{ .Name }} struct {
 	{{ .Name }} {{ .Name }}
 	{{ end -}}
 	{{ if eq .Type "HasMany" "ManyToMany" -}}
-	{{ .Name }} []{{ .Name }}
+	{{ .PluralName }} []{{ .Name }}
 	{{ end -}}
 	{{ end }}
 }

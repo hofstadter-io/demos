@@ -21,20 +21,31 @@ watch: {
 		globs: ["out/*"]
 		handler: {
 			event?: _
+			beg: {
+				n:   string @task(gen.Now)
+				s:   "\(n)"
+			}
+			start: {
+				@task(os.Stdout)
+				dep:  beg.s
+				text: "rebuilding demo \(beg.s)\n"
+				done: _
+			}
 			build: {
 				@task(os.Exec)
+				dep: start.done
 				cmd: ["bash", "-c", "cd out && go build -o ../demo ./cmd/demo"]
 				exitcode: _
 			}
-			now: {
+			end: {
 				dep: build.exitcode
 				n:   string @task(gen.Now)
 				s:   "\(n) (\(dep))"
 			}
 			alert: {
 				@task(os.Stdout)
-				dep:  now.s
-				text: "demo rebuilt \(now.s)\n"
+				dep:  end.s
+				text: "demo rebuilt \(end.s)\n"
 			}
 		}
 	}
@@ -92,6 +103,7 @@ Datamodel: schema.#Datamodel & {
 
 			Reln: {
 				Post: Type: "HasMany"
+				Comment: Type: "HasMany"
 			}
 		}
 
@@ -104,6 +116,17 @@ Datamodel: schema.#Datamodel & {
 			}
 
 			Reln: {
+				User: Type: "OwnedBy"
+				Comment: Type: "HasMany"
+			}
+		}
+
+		Comment: {
+			Fields: {
+				Content: Type: "string"
+			}
+			Reln: {
+				Post: Type: "OwnedBy"
 				User: Type: "OwnedBy"
 			}
 		}

@@ -1,0 +1,46 @@
+{
+    "Users": [
+        {
+            "Posts": [
+                {
+                    "Title": "hello world",
+                    "Content": "my first post"
+                },
+                {
+                    "Title": "ipsum lorem",
+                    "Content": "beep boop bop"
+                }
+            ],
+            "Name": "tony",
+            "Email": "tony@hof.io",
+            "Role": "owner"
+        },
+        {
+            "Posts": [
+                {
+                    "Title": "My favorite pokemon",
+                    "Content": "it's MIU, if you don't get it, read GEB"
+                }
+            ],
+            "Name": "doug",
+            "Email": "doug@hof.io",
+            "Role": "admin"
+        },
+        {
+            "Name": "tortoise",
+            "Email": "tortoise@hof.io",
+            "Role": "user"
+        },
+        {
+            "Posts": [
+                {
+                    "Title": "they got me",
+                    "Content": "damn archers, not sure i'll ever run again Mr. T"
+                }
+            ],
+            "Name": "achilles",
+            "Email": "achilles@hof.io",
+            "Role": "user"
+        }
+    ]
+}

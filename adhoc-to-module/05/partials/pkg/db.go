@@ -53,10 +53,14 @@ func seedDB(filename string) error {
 
 	// seed db
 	{{ range .Datamodel.Models -}}
+	if len(data.{{ .PluralName }}) == 0 {
+		fmt.Println("No {{ .PluralName }} found in", filename)
+	} else {
+		fmt.Println("Seeding {{ .PluralName }} from", filename)
+	}
 	for _, d := range data.{{ .PluralName }} {
 		D := d // local reference
-		fmt.Printf("adding: %#v\n\n", D)
-
+		// fmt.Printf("adding: %#v\n\n", D)
 		res := db.Create(&D)
 		if res.Error != nil {
 			fmt.Println("while seeding {{ .Name }}:", D)

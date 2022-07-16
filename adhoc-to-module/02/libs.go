@@ -27,7 +27,7 @@ func get{{ $ModelName }}ByID(id int) (*{{ .Name }}, error) {
 	return out, res.Error
 }
 
-func update{{ $ModelName }}(id int, up *{{  me}}) error {
+func update{{ $ModelName }}(id int, up *{{ .Name }}) error {
 	res := db.Model(up).Update(&{{ $ModelName }}{
 		ID: id,
 		{{ range .Fields }}{{ .Name }}: in.{{ .Name }},

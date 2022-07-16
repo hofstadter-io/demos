@@ -39,6 +39,7 @@ Datamodel: #Datamodel & {
 				Name: Type:  "string"
 				Email: Type: "string"
 				Role: Type:  "string"
+				Lang: Type:  "string"
 			}
 
 			Reln: {
